@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///E:/work/radio_romania/lib/screens/landing/landing.dart';
+import 'package:radio_romania/screen/landing/landing.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Radio Romania',
       theme: ThemeData(
         // This is the theme of your application.
         //
