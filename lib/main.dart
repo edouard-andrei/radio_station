@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false,
       home: Landing()
     );
   }
