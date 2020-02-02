@@ -29,6 +29,12 @@ class _LandingState extends State<Landing> {
   }
 
   @override
+  void dispose() {
+    audioStop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Station _currentPlayingStation;
 
@@ -67,5 +73,10 @@ class _LandingState extends State<Landing> {
     await FlutterRadio.audioStart();
     FlutterRadio.setVolume(100.0);
     print('Audio Start OK');
+  }
+
+  Future<void> audioStop() async {
+    await FlutterRadio.stop();
+    print('Audio STOP OK');
   }
 }
