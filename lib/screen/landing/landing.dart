@@ -1,8 +1,10 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_radio/flutter_radio.dart';
 import 'package:radio_romania/model/station.dart';
 import 'package:radio_romania/screen/landing/radio_details.dart';
+import 'package:radio_romania/widgets/playback_controller.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -22,61 +24,121 @@ class _LandingState extends State<Landing> {
     Station('assets/images/stations/rockfm.png', 'Rock FM', 'http://live.rockfm.ro:9128/rockfm.aacp')
   ];
 
+  Station _currentPlayingStation;
+
   @override
   void initState() {
     super.initState();
     audioStart();
+    AudioService.connect();
   }
 
   @override
   void dispose() {
     audioStop();
+    AudioService.disconnect();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Station _currentPlayingStation;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Romanian Radio Stations'),
       ),
-      body: new ListView.builder(
-        itemCount: _stations.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () async {
-              print("Tapped on ${_stations[index].name}");
-              if (await FlutterRadio.isPlaying()) {
-                if (_currentPlayingStation == _stations[index]) {
-                  FlutterRadio.pause(url: _currentPlayingStation.url);
-                  _currentPlayingStation = null;
-                } else {
-                  FlutterRadio.pause(url: _currentPlayingStation.url);
-                  FlutterRadio.play(url: _stations[index].url);
-                  _currentPlayingStation = _stations[index];
-                }
-              } else {
-                FlutterRadio.play(url: _stations[index].url);
-                _currentPlayingStation = _stations[index];
-              }
-            },
-            child: new RadioListItem(_stations[index]),
-          );
-        },
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: _stations.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    if (_currentPlayingStation == _stations[index]) {
+                      pauseAudio();
+                    } else {
+                      playAudio(index);
+                    }
+                  },
+                  child: RadioListItem(_stations[index]),
+                );
+              },
+            ),
+          ),
+          _currentPlayingStation != null
+              ? PlaybackController(
+                  title: _currentPlayingStation.name,
+                  isPlaying: false,
+                  volumeValue: 1.0,
+                )
+              : Container()
+        ],
       ),
     );
   }
 
   Future<void> audioStart() async {
     await FlutterRadio.audioStart();
-    FlutterRadio.setVolume(100.0);
     print('Audio Start OK');
   }
 
   Future<void> audioStop() async {
     await FlutterRadio.stop();
     print('Audio STOP OK');
+  }
+
+  void pauseAudio() {
+    FlutterRadio.pause(url: _currentPlayingStation.url);
+    AudioService.pause();
+    setState(() {
+      _currentPlayingStation = null;
+    });
+  }
+
+  Future<void> playAudio(int index) async {
+    if(_currentPlayingStation != null) {
+      FlutterRadio.pause(url: _currentPlayingStation.url);
+      setState(() {
+        _currentPlayingStation = null;
+      });
+    } else {
+      await AudioService.start(
+        backgroundTaskEntrypoint: myBackgroundTaskEntrypoint,
+        androidNotificationChannelName: 'Music Player',
+        androidNotificationIcon: "mipmap/ic_launcher",
+      );
+    }
+    FlutterRadio.play(url: _stations[index].url);
+    AudioService.play();
+    setState(() {
+      _currentPlayingStation = _stations[index];
+    });
+  }
+
+  void myBackgroundTaskEntrypoint() {
+    AudioServiceBackground.run(() => MyBackgroundTask());
+  }
+}
+
+class MyBackgroundTask extends BackgroundAudioTask {
+  @override
+  Future<void> onStart() {
+    throw UnimplementedError();
+  }
+
+
+  @override
+  void onPause() {
+
+  }
+
+  @override
+  void onStop() {
+    // TODO: implement onStop
+  }
+
+  @override
+  void onAudioBecomingNoisy() {
+    onPause();
   }
 }

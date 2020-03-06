@@ -8,31 +8,29 @@ class RadioListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Container(
-
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Stack(
-                children: <Widget>[
-                  Image.asset(
-                    this._station.logoPath,
-                    fit: BoxFit.contain,
-                    width: 48.0,
-                    height: 48.0,
-                  ),
+    return Row(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Stack(
+            children: <Widget>[
+              Image.asset(
+                this._station.logoPath,
+                fit: BoxFit.contain,
+                width: 48.0,
+                height: 48.0,
+              ),
 //                  Image.asset(
 //                    this._station.logoPath,
 //                    fit: BoxFit.contain,
 //                    width: 48.0,
 //                    height: 48.0,
 //                  )
-                ],
-              )),
-          Text(this._station.name)
-        ],
-      ),
+            ],
+          ),
+        ),
+        Text(this._station.name)
+      ],
     );
   }
 }
