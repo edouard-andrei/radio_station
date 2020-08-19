@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 class PlaybackController extends StatelessWidget {
   final String title;
-  final bool isPlaying;
   final double volumeValue;
+  final AudioPlayer player;
+  final double _iconSize = 48;
 
-  PlaybackController({Key key, this.title, this.isPlaying, this.volumeValue})
+  PlaybackController({Key key, this.title, this.volumeValue, this.player})
       : super(key: key);
 
   @override
@@ -20,22 +22,45 @@ class PlaybackController extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.skip_previous),
-                isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-                Icon(Icons.skip_next),
+                InkWell(
+                  child: Icon(
+                    Icons.skip_previous,
+                    size: _iconSize,
+                  ),
+                ),
+                InkWell(
+                  child: player.playing
+                      ? Icon(
+                          Icons.pause,
+                          size: _iconSize,
+                        )
+                      : Icon(
+                          Icons.play_arrow,
+                          size: _iconSize,
+                        ),
+                  onTap: () => {playPause()},
+                ),
+                InkWell(
+                  child: Icon(
+                    Icons.skip_next,
+                    size: _iconSize,
+                  ),
+                ),
               ],
             ),
             Slider(
-                divisions: 20,
+                divisions: 10,
                 min: 0.0,
-                max: 2.0,
+                max: 1.0,
                 value: volumeValue ?? 1.0,
-                onChanged: (value) {
-
-                })
+                onChanged: (value) {})
           ],
         ),
       ),
     );
+  }
+
+  playPause() {
+    player.playing ? player.pause() : player.play();
   }
 }
