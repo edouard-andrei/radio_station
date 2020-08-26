@@ -1,27 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:radio_romania/screen/landing/landing.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
+import 'package:radio_romania/constants/stations.dart';
+import 'package:radio_romania/model/current.dart';
+import 'package:radio_romania/screen/landing.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      MultiProvider(
+        providers: [
+          Provider(
+            create: (BuildContext context) => AudioPlayer(),
+          ),
+          ChangeNotifierProvider(
+            create: (BuildContext context) => Current(),
+          )
+        ],
+        child: MyApp(),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    AudioPlayer player = Provider.of<AudioPlayer>(context);
+    initPlayer(player);
     return MaterialApp(
       title: 'Radio Romania',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Landing()
+      darkTheme: ThemeData.dark(),
+      home: Landing(),
+    );
+  }
+
+  Future<void> initPlayer(AudioPlayer player) async {
+    await player.load(
+      LoopingAudioSource(
+        count: stations.length,
+        child: ConcatenatingAudioSource(
+          children: stations
+              .map((station) => AudioSource.uri(Uri.parse(station.url)))
+              .toList(),
+        ),
+      ),
     );
   }
 }
