@@ -1,50 +1,64 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:provider/provider.dart';
-import 'package:radio_romania/constants/stations.dart';
-import 'package:radio_romania/model/current.dart';
+import 'package:radio_romania/audio_player_task.dart';
 import 'package:radio_romania/screen/landing.dart';
 
 void main() => runApp(
-      MultiProvider(
-        providers: [
-          Provider(
-            create: (BuildContext context) => AudioPlayer(),
-          ),
-          ChangeNotifierProvider(
-            create: (BuildContext context) => Current(),
-          )
-        ],
+      AudioServiceWidget(
         child: MyApp(),
       ),
     );
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    if (!AudioService.connected) {
+      AudioService.connect();
+    }
+    startService();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    AudioPlayer player = Provider.of<AudioPlayer>(context);
-    initPlayer(player);
     return MaterialApp(
       title: 'Radio Romania',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       home: Landing(),
     );
   }
 
-  Future<void> initPlayer(AudioPlayer player) async {
-    await player.load(
-      LoopingAudioSource(
-        count: stations.length,
-        child: ConcatenatingAudioSource(
-          children: stations
-              .map((station) => AudioSource.uri(Uri.parse(station.url)))
-              .toList(),
-        ),
-      ),
-    );
+  @override
+  void reassemble() async {
+    await AudioService.stop();
+    startService();
+    super.reassemble();
   }
+
+  @override
+  void dispose() {
+    AudioService.disconnect();
+    super.dispose();
+  }
+}
+
+Future<void> startService() async {
+  await AudioService.start(
+    backgroundTaskEntrypoint: _backgroundTaskEntrypoint,
+    androidEnableQueue: true,
+    androidNotificationChannelName: 'Player',
+    androidNotificationChannelDescription: 'Player media controls',
+    androidStopForegroundOnPause: true,
+  );
+}
+
+void _backgroundTaskEntrypoint() async {
+  AudioServiceBackground.run(() => AudioPlayerTask());
 }
