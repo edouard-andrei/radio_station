@@ -1,7 +1,7 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:provider/provider.dart';
+import 'package:radio_romania/main.dart';
 
 class PlayerStatusBtn extends StatelessWidget {
   final double _iconSize;
@@ -10,27 +10,30 @@ class PlayerStatusBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AudioPlayer>(
-      builder: (BuildContext context, player, Widget child) => InkWell(
-        child: StreamBuilder<PlayerState>(
-          stream: player.playerStateStream,
-          builder: (context, stream) => _getStatusWidget(stream),
-        ),
-        onTap: () => {
-          player.playing ? player.pause() : player.play(),
+    return StreamBuilder<PlaybackState>(
+      stream: AudioService.playbackStateStream,
+      builder: (context, stream) => InkWell(
+        child: _getStatusWidget(stream),
+        onTap: () {
+          startService();
+          if (stream.data.playing) {
+            AudioService.pause();
+          } else {
+            AudioService.play();
+          }
         },
       ),
     );
   }
 
-  Widget _getStatusWidget(AsyncSnapshot<PlayerState> stream) {
-    if (stream.data?.processingState == ProcessingState.buffering ||
-        stream.data?.processingState == ProcessingState.loading) {
+  Widget _getStatusWidget(AsyncSnapshot<PlaybackState> stream) {
+    if (stream.data?.processingState == AudioProcessingState.connecting ||
+        stream.data?.processingState == AudioProcessingState.buffering) {
       return CircularProgressIndicator(
-        strokeWidth: 2,
+        strokeWidth: 2.5,
       );
     }
-    if (stream.data != null ? stream.data.playing : false) {
+    if (stream.data?.playing ?? false) {
       return Icon(
         Icons.pause,
         size: _iconSize,
