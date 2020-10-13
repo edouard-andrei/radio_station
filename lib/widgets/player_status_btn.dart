@@ -16,7 +16,7 @@ class PlayerStatusBtn extends StatelessWidget {
         child: _getStatusWidget(stream),
         onTap: () {
           startService();
-          if (stream.data.playing) {
+          if (stream.data?.playing ?? false) {
             AudioService.pause();
           } else {
             AudioService.play();

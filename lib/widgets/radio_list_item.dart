@@ -1,6 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class RadioListItem extends StatelessWidget {
   final MediaItem _station;
 
@@ -19,19 +21,25 @@ class RadioListItem extends StatelessWidget {
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Image.asset(
-                    this._station.artUri,
-                    fit: BoxFit.contain,
-                    height: 48.0,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  startService();
+                  AudioService.skipToQueueItem(_station.id);
+                },
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Image.asset(
+                      this._station.artUri,
+                      fit: BoxFit.contain,
+                      height: 48.0,
+                    ),
                   ),
                 ),
               ),
             ),
           );
-        }
-    );
+        });
   }
 }

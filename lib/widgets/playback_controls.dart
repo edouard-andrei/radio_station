@@ -25,7 +25,10 @@ class PlaybackControls extends StatelessWidget {
               AudioService.skipToPrevious();
             },
           ),
-          PlayerStatusBtn(_iconSize),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: PlayerStatusBtn(_iconSize),
+          ),
           InkWell(
             child: Icon(
               Icons.skip_next,
