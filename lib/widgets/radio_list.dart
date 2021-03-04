@@ -11,10 +11,13 @@ class RadioList extends StatelessWidget {
     return OrientationBuilder(
       builder: (context, orientation) {
         return GridView.count(
+          padding: EdgeInsets.zero,
           crossAxisCount: orientation == Orientation.portrait ? 3 : 7,
-          children: _mediaLibrary.stations.map((station) {
-            return RadioListItem(station);
-          }).toList(),
+          children: [
+            ..._mediaLibrary.stations
+                .map((station) => RadioListItem(station))
+                .toList()
+          ],
         );
       },
     );

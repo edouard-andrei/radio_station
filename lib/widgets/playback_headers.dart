@@ -28,14 +28,7 @@ class PlaybackHeaders extends StatelessWidget {
               child: Image.asset(stream.data?.artUri ?? ''),
             )
           : Container(),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // stream.data?.artist != stream.data?.title
-          //     ? Text(stream.data?.artist)
-          //     : Container(),
-        ],
-      ),
+      stream.data?.artist != null ? Text(stream.data?.artist) : Container(),
     ];
   }
 }
