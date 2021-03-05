@@ -6,12 +6,18 @@ class Landing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Radio Stations'),
-      ),
       body: Stack(
         children: [
-          RadioList(),
+          Column(
+            children: [
+              AppBar(
+                title: Text('Radio Stations'),
+              ),
+              Expanded(
+                child: RadioList(),
+              ),
+            ],
+          ),
           PlaybackView(),
         ],
       ),

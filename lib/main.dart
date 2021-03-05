@@ -4,9 +4,7 @@ import 'package:radio_romania/audio_player_task.dart';
 import 'package:radio_romania/screen/landing.dart';
 
 void main() => runApp(
-      AudioServiceWidget(
-        child: MyApp(),
-      ),
+      MyApp(),
     );
 
 class MyApp extends StatefulWidget {
@@ -31,14 +29,16 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: Landing(),
+      home: AudioServiceWidget(
+        child: Landing(),
+      ),
     );
   }
 
   @override
-  void reassemble() async {
+  Future<void> reassemble() async {
     await AudioService.stop();
-    startService();
+    await startService();
     super.reassemble();
   }
 
@@ -59,6 +59,6 @@ Future<void> startService() async {
   );
 }
 
-void _backgroundTaskEntrypoint() async {
+void _backgroundTaskEntrypoint() {
   AudioServiceBackground.run(() => AudioPlayerTask());
 }

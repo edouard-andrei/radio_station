@@ -1,8 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-
 class RadioListItem extends StatelessWidget {
   final MediaItem _station;
 
@@ -24,7 +22,6 @@ class RadioListItem extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
-                  startService();
                   AudioService.skipToQueueItem(_station.id);
                 },
                 child: Container(
