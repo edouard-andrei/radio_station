@@ -8,27 +8,27 @@ class PlaybackHeaders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MediaItem>(
+    return StreamBuilder<MediaItem?>(
       stream: AudioService.currentMediaItemStream,
       builder: (context, stream) {
         return vertical
-            ? Column(children: _details(stream))
-            : Row(children: _details(stream));
+            ? Column(children: _details(stream.data))
+            : Row(children: _details(stream.data));
       },
     );
   }
 
-  List<Widget> _details(AsyncSnapshot<MediaItem> stream) {
+  List<Widget> _details(MediaItem? mediaItem) {
     return [
-      stream.data?.artUri != null
+      mediaItem!.artUri?.path != null
           ? ConstrainedBox(
               constraints: vertical
                   ? BoxConstraints.expand(height: 150, width: 150)
                   : BoxConstraints.expand(height: 100, width: 100),
-              child: Image.asset(stream.data?.artUri ?? ''),
+              child: Image.asset(mediaItem.artUri?.path ?? ''),
             )
           : Container(),
-      stream.data?.artist != null ? Text(stream.data?.artist) : Container(),
+      mediaItem.artist != null ? Text(mediaItem.artist!) : Container(),
     ];
   }
 }

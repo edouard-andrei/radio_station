@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:radio_romania/main.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlayerStatusBtn extends StatelessWidget {
   final double _iconSize;
@@ -12,36 +12,29 @@ class PlayerStatusBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<PlaybackState>(
       stream: AudioService.playbackStateStream,
-      builder: (context, stream) => InkWell(
-        child: _getStatusWidget(stream),
-        onTap: () {
-          startService();
-          if (stream.data?.playing ?? false) {
-            AudioService.pause();
-          } else {
-            AudioService.play();
-          }
-        },
-      ),
+      builder: (context, snapPlaybackState) {
+        final playbackState = snapPlaybackState.data;
+        if (playbackState == null) return Container();
+        return InkWell(
+          child: _getStatusWidget(playbackState),
+          onTap: () {
+            playbackState.playing ? AudioService.pause() : AudioService.play();
+          },
+        );
+      },
     );
   }
 
-  Widget _getStatusWidget(AsyncSnapshot<PlaybackState> stream) {
-    if (stream.data?.processingState == AudioProcessingState.connecting ||
-        stream.data?.processingState == AudioProcessingState.buffering) {
+  Widget _getStatusWidget(PlaybackState playbackState) {
+    if (playbackState.processingState == AudioProcessingState.connecting ||
+        playbackState.processingState == AudioProcessingState.buffering) {
       return CircularProgressIndicator(
-        strokeWidth: 2.5,
+        strokeWidth: 1.5,
       );
     }
-    if (stream.data?.playing ?? false) {
-      return Icon(
-        Icons.pause,
-        size: _iconSize,
-      );
+    if (playbackState.playing) {
+      return FaIcon(FontAwesomeIcons.pause, size: _iconSize);
     }
-    return Icon(
-      Icons.play_arrow,
-      size: _iconSize,
-    );
+    return FaIcon(FontAwesomeIcons.play, size: _iconSize);
   }
 }

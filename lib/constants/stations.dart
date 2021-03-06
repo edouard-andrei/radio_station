@@ -8,8 +8,7 @@ class MediaLibrary {
       title: "Kiss FM",
       artist: "Kiss FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/kissfm.png",
+      artUri: Uri(path: "assets/images/stations/kissfm.png"),
     ),
     MediaItem(
       id: "http://astreaming.europafm.ro:8000/EuropaFM_aac",
@@ -17,8 +16,7 @@ class MediaLibrary {
       title: "Europa FM",
       artist: "Europa FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/europafm.png",
+      artUri: Uri(path: "assets/images/stations/europafm.png"),
     ),
     MediaItem(
       id: "http://edge126.rdsnet.ro:84/profm/profm.mp3",
@@ -26,8 +24,7 @@ class MediaLibrary {
       title: "Pro FM",
       artist: "Pro FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/profm.png",
+      artUri: Uri(path: "assets/images/stations/profm.png"),
     ),
     MediaItem(
       id: "https://live7digi.antenaplay.ro/radiozu/radiozu-48000.m3u8",
@@ -35,8 +32,7 @@ class MediaLibrary {
       title: "Radio ZU",
       artist: "Radio ZU",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/radiozu.png",
+      artUri: Uri(path: "assets/images/stations/radiozu.png"),
     ),
     MediaItem(
       id: "http://live.magicfm.ro:9128/magicfm.aacp",
@@ -44,8 +40,7 @@ class MediaLibrary {
       title: "Magic FM",
       artist: "Magic FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/magicfm.png",
+      artUri: Uri(path: "assets/images/stations/magicfm.png"),
     ),
     MediaItem(
       id: "http://astreaming.virginradio.ro:8000/virgin_aacp_64k",
@@ -53,8 +48,7 @@ class MediaLibrary {
       title: "Virgin Radio Romania",
       artist: "Virgin Radio Romania",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/virgin.png",
+      artUri: Uri(path: "assets/images/stations/virgin.png"),
     ),
     MediaItem(
       id: "http://live.onefm.ro:9128/onefm.aacp",
@@ -62,8 +56,7 @@ class MediaLibrary {
       title: "One FM",
       artist: "One FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/onefm.png",
+      artUri: Uri(path: "assets/images/stations/onefm.png"),
     ),
     MediaItem(
       id: "http://astreaming.vibefm.ro:8000/vibefm_aacp48k",
@@ -71,8 +64,7 @@ class MediaLibrary {
       title: "Vibe FM",
       artist: "Vibe FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/vibefm.png",
+      artUri: Uri(path: "assets/images/stations/vibefm.png"),
     ),
     MediaItem(
       id: "http://live.rockfm.ro:9128/rockfm.aacp",
@@ -80,8 +72,7 @@ class MediaLibrary {
       title: "Rock FM",
       artist: "Rock FM",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/rockfm.png",
+      artUri: Uri(path: "assets/images/stations/rockfm.png"),
     ),
     MediaItem(
       id: "https://live.radio-impuls.ro/stream",
@@ -89,8 +80,7 @@ class MediaLibrary {
       title: "Impuls Radio",
       artist: "Impuls Radio",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/impuls.png",
+      artUri: Uri(path: "assets/images/stations/impuls.png"),
     ),
     MediaItem(
       id: "https://streamer.radio.co/s2c3cc784b/listen",
@@ -98,8 +88,7 @@ class MediaLibrary {
       title: "Electro Swing Radio",
       artist: "Electro Swing Radio",
       duration: Duration.zero,
-      artUri:
-      "assets/images/stations/electro-swing.png",
+      artUri: Uri(path: "assets/images/stations/electro-swing.png"),
     )
   ];
 

@@ -14,7 +14,7 @@ description: Asculta posturile de radio din Romania.
 version: 0.5.0
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -22,19 +22,21 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  animations: ^1.1.2
-  audio_service: ^0.16.2+1
-  cupertino_icons: ^1.0.0
-  font_awesome_flutter: ^8.11.0
-  just_audio: ^0.6.14+1
-  miniplayer: ^0.6.1
-  provider: ^4.3.3
-  shimmer: ^1.1.2
+  animations: ^2.0.0
+  audio_service: ^0.17.0-nullsafety.0
+  audio_session: ^0.1.0
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^9.0.0-nullsafety
+  google_fonts: ^2.0.0
+  just_audio: ^0.7.0
+  miniplayer: ^1.0.0-nullsafety.0
+  provider: ^5.0.0
+  shimmer: ^2.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.8.1"
+  flutter_launcher_icons: ^0.9.0
 
 flutter_icons:
   image_path: "assets/images/radio-icon.png"

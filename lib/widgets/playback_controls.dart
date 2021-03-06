@@ -1,27 +1,22 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:radio_romania/widgets/player_status_btn.dart';
-
-import '../main.dart';
 
 class PlaybackControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final double _iconSize = 32;
+    final double _iconSize = 28;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(24.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           InkWell(
-            child: Icon(
-              Icons.skip_previous,
-              size: _iconSize,
-            ),
+            child: FaIcon(FontAwesomeIcons.stepBackward, size: _iconSize),
             onTap: () {
-              startService();
               AudioService.skipToPrevious();
             },
           ),
@@ -30,12 +25,8 @@ class PlaybackControls extends StatelessWidget {
             child: PlayerStatusBtn(_iconSize),
           ),
           InkWell(
-            child: Icon(
-              Icons.skip_next,
-              size: _iconSize,
-            ),
+            child: FaIcon(FontAwesomeIcons.stepForward, size: _iconSize),
             onTap: () {
-              startService();
               AudioService.skipToNext();
             },
           ),

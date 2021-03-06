@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:radio_romania/constants/stations.dart';
 
@@ -6,55 +9,32 @@ class AudioPlayerTask extends BackgroundAudioTask {
   final AudioPlayer _player = AudioPlayer();
   final MediaLibrary _mediaLibrary = MediaLibrary();
 
+  AudioProcessingState? _skipState;
+  StreamSubscription<PlaybackEvent>? _eventSubscription;
+
   bool _playing = false;
 
   List<MediaItem> get queue => _mediaLibrary.stations;
 
-  int get index => _player.currentIndex;
+  int? get index => _player.currentIndex;
 
   @override
-  Future<void> onSkipToPrevious() async {
-    await _player.seekToPrevious();
-  }
+  Future<void> onSkipToPrevious() => _player.seekToPrevious();
 
   @override
-  Future<void> onPlay() async {
-    _player.play();
-    await AudioServiceBackground.setState(
-      controls: <MediaControl>[
-        MediaControl.skipToPrevious,
-        MediaControl.pause,
-        MediaControl.skipToNext
-      ],
-      processingState: _playerState2APS(_player.playerState.processingState),
-      playing: true,
-    );
-  }
+  Future<void> onPlay() => _player.play();
 
   @override
-  Future<void> onPause() async {
-    await _player.pause();
-    await AudioServiceBackground.setState(
-      controls: <MediaControl>[
-        MediaControl.skipToPrevious,
-        MediaControl.play,
-        MediaControl.skipToNext
-      ],
-      processingState: _playerState2APS(_player.playerState.processingState),
-      playing: false,
-    );
-  }
+  Future<void> onPause() => _player.pause();
 
   @override
-  Future<void> onSkipToNext() async {
-    await _player.seekToNext();
-  }
+  Future<void> onSkipToNext() => _player.seekToNext();
 
   @override
   Future<void> onSkipToQueueItem(String mediaId) async {
     int _index = queue.indexWhere((station) => station.id == mediaId);
+    if (_index == -1) return;
     _player.seek(Duration.zero, index: _index);
-    AudioServiceBackground.setMediaItem(queue.elementAt(_index));
   }
 
   @override
@@ -73,7 +53,36 @@ class AudioPlayerTask extends BackgroundAudioTask {
   }
 
   @override
-  Future<void> onStart(Map<String, dynamic> params) async {
+  Future<void> onStart(Map<String, dynamic>? params) async {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration.music());
+
+    _eventSubscription = _player.playbackEventStream.listen((event) {
+      _broadcastState();
+    });
+
+    await _player.setLoopMode(LoopMode.all);
+    await _player.setVolume(0.01);
+
+    // Listen for current media item index
+    _player.currentIndexStream.listen((index) async {
+      if (index != null) {
+        AudioServiceBackground.setMediaItem(queue[index]);
+      }
+    });
+
+    // Listen for play/pause changes
+    _player.playerStateStream.listen((playerState) {
+      _playing = playerState.playing;
+    });
+
+    _player.icyMetadataStream.listen((icyMetadata) {
+      AudioServiceBackground.sendCustomEvent(icyMetadata);
+    });
+
+    // Need to set queue so background clients know the queue
+    await AudioServiceBackground.setQueue(queue);
+
     // Setup player radio queue
     await _player.setAudioSource(
       ConcatenatingAudioSource(
@@ -84,51 +93,51 @@ class AudioPlayerTask extends BackgroundAudioTask {
       initialIndex: 0,
       preload: false,
     );
-
-    await _player.setLoopMode(LoopMode.all);
-
-    _player.currentIndexStream.listen((index) async {
-      if (index != null) {
-        MediaItem mediaItem = queue[index];
-        AudioServiceBackground.setMediaItem(mediaItem);
-      }
-    });
-
-    // Listen for play/pause changes
-    _player.playerStateStream.listen((playerState) {
-      _playing = playerState.playing;
-    });
-
-    // Need to set queue so background clients know the queue
-    await AudioServiceBackground.setQueue(queue);
-
-    // Update notification UI
-    await AudioServiceBackground.setState(
-      controls: <MediaControl>[
-        MediaControl.skipToPrevious,
-        _playing ? MediaControl.pause : MediaControl.play,
-        MediaControl.skipToNext
-      ],
-      processingState: _playerState2APS(_player.playerState.processingState),
-      playing: _playing,
-    );
   }
 
   @override
   Future<void> onStop() async {
-    await _player.pause();
     await _player.dispose();
-    super.onStop();
+    _eventSubscription?.cancel();
+    // It is important to wait for this state to be broadcast before we shut
+    // down the task. If we don't, the background task will be destroyed before
+    // the message gets sent to the UI.
+    await _broadcastState();
+    // Shut down this task
+    await super.onStop();
   }
 
-  AudioProcessingState _playerState2APS(ProcessingState playerState) {
-    if (playerState == ProcessingState.loading)
-      return AudioProcessingState.connecting;
-    if (playerState == ProcessingState.buffering)
-      return AudioProcessingState.buffering;
-    if (playerState == ProcessingState.ready) return AudioProcessingState.ready;
-    if (playerState == ProcessingState.completed)
-      return AudioProcessingState.completed;
-    return AudioProcessingState.none;
+  Future<void> _broadcastState() async {
+    await AudioServiceBackground.setState(
+      controls: [
+        MediaControl.skipToPrevious,
+        if (_player.playing) MediaControl.pause else MediaControl.play,
+        MediaControl.stop,
+        MediaControl.skipToNext,
+      ],
+      androidCompactActions: [0, 1, 2],
+      processingState: _getProcessingState(),
+      playing: _player.playing,
+    );
+  }
+
+  /// Maps just_audio's processing state into into audio_service's playing
+  /// state. If we are in the middle of a skip, we use [_skipState] instead.
+  AudioProcessingState _getProcessingState() {
+    if (_skipState != null) return _skipState!;
+    switch (_player.processingState) {
+      case ProcessingState.idle:
+        return AudioProcessingState.stopped;
+      case ProcessingState.loading:
+        return AudioProcessingState.connecting;
+      case ProcessingState.buffering:
+        return AudioProcessingState.buffering;
+      case ProcessingState.ready:
+        return AudioProcessingState.ready;
+      case ProcessingState.completed:
+        return AudioProcessingState.completed;
+      default:
+        throw Exception("Invalid state: ${_player.processingState}");
+    }
   }
 }
