@@ -8,7 +8,7 @@ class RadioListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MediaItem>(
+    return StreamBuilder<MediaItem?>(
         stream: AudioService.currentMediaItemStream,
         builder: (context, stream) {
           return Padding(
@@ -28,7 +28,7 @@ class RadioListItem extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Image.asset(
-                      this._station.artUri,
+                      this._station.artUri!.path,
                       fit: BoxFit.contain,
                       height: 48.0,
                     ),

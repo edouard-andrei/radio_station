@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:radio_romania/audio_player_task.dart';
 import 'package:radio_romania/screen/landing.dart';
 
-void main() => runApp(
-      MyApp(),
-    );
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
@@ -23,6 +21,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void dispose() {
+    AudioService.stop();
+    AudioService.disconnect();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Radio Romania',
@@ -33,19 +38,6 @@ class _MyAppState extends State<MyApp> {
         child: Landing(),
       ),
     );
-  }
-
-  @override
-  Future<void> reassemble() async {
-    await AudioService.stop();
-    await startService();
-    super.reassemble();
-  }
-
-  @override
-  void dispose() {
-    AudioService.disconnect();
-    super.dispose();
   }
 }
 
