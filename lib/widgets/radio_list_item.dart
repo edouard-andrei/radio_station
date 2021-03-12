@@ -9,34 +9,36 @@ class RadioListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<MediaItem?>(
-        stream: AudioService.currentMediaItemStream,
-        builder: (context, stream) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              elevation: 2.0,
-              color: _station == stream.data
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(8),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () {
-                  AudioService.skipToQueueItem(_station.id);
-                },
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
+      stream: AudioService.currentMediaItemStream,
+      builder: (context, stream) {
+        return Material(
+          elevation: 2.0,
+          color: _station == stream.data
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () async {
+              await AudioService.skipToQueueItem(_station.id);
+            },
+            child: Container(
+              child: LayoutBuilder(
+                builder: (_, constraints) {
+                  return Padding(
+                    padding: EdgeInsets.all(constraints.maxWidth / 8),
                     child: Image.asset(
                       this._station.artUri!.path,
                       fit: BoxFit.contain,
                       height: 48.0,
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

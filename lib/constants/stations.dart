@@ -7,7 +7,7 @@ class MediaLibrary {
       album: "Kiss FM",
       title: "Kiss FM",
       artist: "Kiss FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/kissfm.png"),
     ),
     MediaItem(
@@ -15,7 +15,7 @@ class MediaLibrary {
       album: "Europa FM",
       title: "Europa FM",
       artist: "Europa FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/europafm.png"),
     ),
     MediaItem(
@@ -23,15 +23,15 @@ class MediaLibrary {
       album: "Pro FM",
       title: "Pro FM",
       artist: "Pro FM",
-      duration: Duration.zero,
-      artUri: Uri(path: "assets/images/stations/profm.png"),
+      duration: Duration(days: 30),
+      artUri: Uri(path: "assets/images/stations/profm1.png"),
     ),
     MediaItem(
       id: "https://live7digi.antenaplay.ro/radiozu/radiozu-48000.m3u8",
       album: "Radio ZU",
       title: "Radio ZU",
       artist: "Radio ZU",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/radiozu.png"),
     ),
     MediaItem(
@@ -39,7 +39,7 @@ class MediaLibrary {
       album: "Magic FM",
       title: "Magic FM",
       artist: "Magic FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/magicfm.png"),
     ),
     MediaItem(
@@ -47,7 +47,7 @@ class MediaLibrary {
       album: "Virgin Radio Romania",
       title: "Virgin Radio Romania",
       artist: "Virgin Radio Romania",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/virgin.png"),
     ),
     MediaItem(
@@ -55,7 +55,7 @@ class MediaLibrary {
       album: "One FM",
       title: "One FM",
       artist: "One FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/onefm.png"),
     ),
     MediaItem(
@@ -63,7 +63,7 @@ class MediaLibrary {
       album: "Vibe FM",
       title: "Vibe FM",
       artist: "Vibe FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/vibefm.png"),
     ),
     MediaItem(
@@ -71,7 +71,7 @@ class MediaLibrary {
       album: "Rock FM",
       title: "Rock FM",
       artist: "Rock FM",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/rockfm.png"),
     ),
     MediaItem(
@@ -79,7 +79,7 @@ class MediaLibrary {
       album: "Impuls Radio",
       title: "Impuls Radio",
       artist: "Impuls Radio",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/impuls.png"),
     ),
     MediaItem(
@@ -87,7 +87,7 @@ class MediaLibrary {
       album: "Electro Swing Radio",
       title: "Electro Swing Radio",
       artist: "Electro Swing Radio",
-      duration: Duration.zero,
+      duration: Duration(days: 30),
       artUri: Uri(path: "assets/images/stations/electro-swing.png"),
     )
   ];

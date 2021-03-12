@@ -62,7 +62,6 @@ class AudioPlayerTask extends BackgroundAudioTask {
     });
 
     await _player.setLoopMode(LoopMode.all);
-    await _player.setVolume(0.01);
 
     // Listen for current media item index
     _player.currentIndexStream.listen((index) async {
