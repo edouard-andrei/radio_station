@@ -7,7 +7,7 @@ class RadioList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (_, contraints) {
+      builder: (_, constraints) {
         return StreamBuilder<List<MediaItem>?>(
             stream: AudioService.queueStream,
             builder: (context, snapQueueStream) {
@@ -19,8 +19,10 @@ class RadioList extends StatelessWidget {
                 return Center(child: Text("No radios available"));
               }
               return GridView.count(
-                padding: EdgeInsets.zero,
-                crossAxisCount: _getAxisCount(contraints.maxWidth),
+                padding: EdgeInsets.all(16),
+                crossAxisCount: _getAxisCount(constraints.maxWidth),
+                mainAxisSpacing: 16.0,
+                crossAxisSpacing: 16.0,
                 children: [
                   ...queue.map((mediaItem) => RadioListItem(mediaItem)).toList()
                 ],

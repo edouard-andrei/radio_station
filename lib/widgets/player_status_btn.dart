@@ -26,8 +26,7 @@ class PlayerStatusBtn extends StatelessWidget {
   }
 
   Widget _getStatusWidget(PlaybackState playbackState) {
-    if (playbackState.processingState == AudioProcessingState.connecting ||
-        playbackState.processingState == AudioProcessingState.buffering) {
+    if (playbackState.processingState == AudioProcessingState.connecting) {
       return CircularProgressIndicator(
         strokeWidth: 1.5,
       );

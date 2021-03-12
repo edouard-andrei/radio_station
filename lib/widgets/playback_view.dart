@@ -8,8 +8,8 @@ import 'package:miniplayer/miniplayer.dart';
 import 'package:radio_romania/widgets/playback_controls.dart';
 
 class PlaybackView extends StatelessWidget {
-  final double _smallThreshold = 0.1;
-  final double _maxThreshold = 0.3;
+  final double _smallThreshold = 0.15;
+  final double _maxThreshold = 0.5;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class PlaybackView extends StatelessWidget {
         final mediaItem = snapMediaItem.data;
         if (mediaItem != null) {
           return LayoutBuilder(
-            builder: (context, constraints) {
+            builder: (context, fullPageConstraints) {
               return Miniplayer(
-                minHeight: constraints.maxHeight * _smallThreshold,
-                maxHeight: constraints.maxHeight * _maxThreshold,
+                minHeight: fullPageConstraints.maxHeight * _smallThreshold,
+                maxHeight: fullPageConstraints.maxHeight * _maxThreshold,
                 elevation: 4.0,
                 curve: Curves.ease,
                 builder: (height, percentage) {
@@ -42,11 +42,12 @@ class PlaybackView extends StatelessWidget {
                                 ? Image.asset(
                                     "${mediaItem.artUri}",
                                     width: lerpDouble(75, 150, percentage),
+                                    fit: BoxFit.contain,
                                   )
                                 : Container(),
                           ),
                           Align(
-                            alignment: constraints.maxWidth < 800
+                            alignment: fullPageConstraints.maxWidth < 800
                                 ? Alignment.lerp(Alignment.centerLeft,
                                     Alignment.center, percentage)!
                                 : Alignment.lerp(Alignment.centerLeft,
@@ -54,7 +55,7 @@ class PlaybackView extends StatelessWidget {
                             child: Container(
                               margin: EdgeInsets.only(
                                   top: lerpDouble(0, 72, percentage)!),
-                              height: constraints.maxHeight * 0.12,
+                              height: fullPageConstraints.maxHeight * 0.12,
                               child: Stack(
                                 children: [
                                   Align(
